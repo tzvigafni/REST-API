@@ -1,25 +1,92 @@
+const mongoose = require('mongoose');
+const Category = require('../models/category');
+
 module.exports = {
     getAllCategories: (req, res) => {
-        res.status(200).json({
-            message: 'Get All '
-        })
+        Category.find().then((categories) => {
+            res.status(200).json({
+                categories
+            })
+        }).catch(error => {
+            res.status(500).json({
+                error
+            })
+        });
+    },
+    getCategory: (req, res) => {
+        const categoryId = req.params.categoryId;
+        Category.findById(categoryId).then((category) => {
+            res.status(200).json({
+                category
+            })
+        }).catch(error => {
+            res.status(500).json({
+                error
+            })
+        });
     },
     createCategory: (req, res) => {
-        res.status(200).json({
-            message: 'Create a '
-        })
+        const { title, description } = req.body;
+
+        const category = new Category({
+            _id: mongoose.Types.ObjectId(),
+            title,
+            description,
+        });
+
+        category.save().then(() => {
+            res.status(200).json({
+                message: 'Created category'
+            })
+        }).catch(error => {
+            res.status(500).json({
+                error
+            })
+        });
     },
     updateCategory: (req, res) => {
-        const artcleId = req.params.artcleId
-        res.status(200).json({
-            message: `Update - ${artcleId}`
+        const categoryId = req.params.categoryId;
+
+        Category.findById(categoryId).then((category) => {
+            if (!category) {
+                return res.status(404).json({
+                    message: "Category not found!"
+                })
+            }
+        }).then(() => {
+            Category.updateOne({ _id: categoryId }, req.body).then(() => {
+                res.status(200).json({
+                    message: `Update category - ${categoryId}`
+                })
+            }).catch(error => {
+                res.status(500).json({
+                    error
+                })
+            });
         })
     },
-
     deleteCategory: (req, res) => {
-        const artcleId = req.params.artcleId
-        res.status(200).json({
-            message: `Delete - ${artcleId}`
+        const categoryId = req.params.categoryId
+
+        Category.findById(categoryId).then((category) => {
+            if (!category) {
+                return res.status(404).json({
+                    message: "Category not found!"
+                })
+            }
+        }).then(() => {
+            Category.deleteOne({ _id: categoryId })
+                .then(() => {
+                    res.status(200).json({
+                        message: `Delete category - ${categoryId}`
+                    })
+                }).catch(error => {
+                    res.status(500).json({
+                        error
+                    })
+                });
         })
+
+
     }
 }
