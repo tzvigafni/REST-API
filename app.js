@@ -4,17 +4,22 @@ const morgan = require('morgan');
 
 //1
 // mongoose ===>  'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-// const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@articles-api.2ftvfa1.mongodb.net/?retryWrites=true&w=majority`;
-// mongoose.connect(uri, {
-//     // useNewUrlParser: true,
-//     // useUnifiedTopology: true
-// });
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@articles-api.2ftvfa1.mongodb.net/?retryWrites=true&w=majority`;
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
-// mongoose.connection.on('connected', () => {
-//     console.log('MongoDB Connected!');
-// });
+try {
+    mongoose.connection.on('connected', () => {
+    console.log('MongoDB Connected!');
+});
+} catch (error) {
+    console.log(error);
+}
+
 
 //2
 // mongo ====>   'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
