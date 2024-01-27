@@ -7,17 +7,22 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@articles-api.2ftvfa1.mongodb.net/?retryWrites=true&w=majority`;
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+try {
+    mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+} catch (error) {
+    console.log("Unable to connect to MongoDB!..");
+
+}
 
 try {
     mongoose.connection.on('connected', () => {
     console.log('MongoDB Connected!');
 });
 } catch (error) {
-    console.log(error);
+    console.log("Unable to connect to MongoDB!");
 }
 
 
@@ -55,6 +60,8 @@ const categoriesRoutes = require('./api/routes/categories');
 const usersRoutes = require('./api/routes/users');
 
 app.use(morgan("dev"));
+
+app.use('/uploads', express.static('uploads'));
 
 app.use(express.json());
 app.use(express.urlencoded({
