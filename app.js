@@ -10,7 +10,8 @@ const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PAS
 try {
     mongoose.connect(uri, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true, 
+        useCreateIndex: true
     });
 } catch (error) {
     console.log("Unable to connect to MongoDB!..");
@@ -19,8 +20,8 @@ try {
 
 try {
     mongoose.connection.on('connected', () => {
-    console.log('MongoDB Connected!');
-});
+        console.log('MongoDB Connected!');
+    });
 } catch (error) {
     console.log("Unable to connect to MongoDB!");
 }
@@ -59,8 +60,10 @@ const articlesRoutes = require('./api/routes/articles');
 const categoriesRoutes = require('./api/routes/categories');
 const usersRoutes = require('./api/routes/users');
 
+// use in morgan
 app.use(morgan("dev"));
 
+// Displaying images to the user from the server
 app.use('/uploads', express.static('uploads'));
 
 app.use(express.json());
@@ -85,19 +88,19 @@ app.use('/users', usersRoutes);
 
 
 //end for error
-app.use((req,res, next) => {
+app.use((req, res, next) => {
     const error = new Error('Not Found!');
     error.status = 404;
     next(error);
 });
 
 app.use((error, req, res, next) => {
-res.status(error.status|| 500);
-res.json({
-    error: {
-        message: error.message
-    }
-})
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    })
 });
 
 module.exports = app;
