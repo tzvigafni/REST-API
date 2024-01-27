@@ -62,11 +62,11 @@ module.exports = {
                     const token = jwt.sign({
                         id: user._id,
                         email: user.email,
-                    }, 
-                    process.env.JWT_KEY,
-                 {
-                    expiresIn: "1H"
-                 }
+                    },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "1H"
+                        }
                     );
 
                     return res.status(200).json({
@@ -77,7 +77,7 @@ module.exports = {
 
                 res.status(401).json({
                     messaga: 'Auth failed!'
-                }) 
+                })
             })
 
         })

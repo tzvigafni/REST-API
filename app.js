@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const checkAuth = require('./api/middlewares/checkAuth');
 
 //1
 // mongoose ===>  'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
@@ -83,7 +84,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/articles', articlesRoutes);
-app.use('/categories', categoriesRoutes);
+app.use('/categories', checkAuth, categoriesRoutes);
 app.use('/users', usersRoutes);
 
 
